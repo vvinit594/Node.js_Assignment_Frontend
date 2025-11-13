@@ -1,6 +1,6 @@
 /**
- * Login Page
- * Admin login page
+ * Login Page (Simplified)
+ * Allows anyone to log in with any credentials
  */
 
 import { useState } from 'react';
@@ -17,48 +17,26 @@ const Login = () => {
     password: '',
   });
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const validate = () => {
-    const newErrors = {};
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!validate()) {
-      return;
-    }
-
     try {
       setLoading(true);
+      // Accept any credentials - no validation
       await authService.login(formData);
-      toast.success('Login successful!');
+      toast.success('Welcome! Login successful');
       navigate('/');
     } catch (err) {
       console.error('Login error:', err);
-      toast.error(err.response?.data?.message || 'Login failed');
+      // Even on error, allow access
+      toast.success('Welcome! Login successful');
+      navigate('/');
     } finally {
       setLoading(false);
     }
@@ -74,20 +52,19 @@ const Login = () => {
           </div>
           <h1 className="text-3xl font-bold text-gray-800">Welcome Back</h1>
           <p className="text-gray-600 mt-2">Login to Office Management System</p>
+          <p className="text-sm text-green-600 mt-2 font-medium">✨ Demo Mode: Enter any credentials to explore</p>
         </div>
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input
             label="Email"
-            type="email"
+            type="text"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="admin@example.com"
+            placeholder="Enter any email"
             icon={FaEnvelope}
-            error={errors.email}
-            required
           />
 
           <Input
@@ -96,10 +73,8 @@ const Login = () => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            placeholder="••••••••"
+            placeholder="Enter any password"
             icon={FaLock}
-            error={errors.password}
-            required
           />
 
           <Button
@@ -108,8 +83,22 @@ const Login = () => {
             loading={loading}
             disabled={loading}
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Logging in...' : 'Login & Explore'}
           </Button>
+
+          {/* Quick Access Button */}
+          <button
+            type="button"
+            onClick={async () => {
+              setLoading(true);
+              await authService.login({ email: 'demo@example.com', password: 'demo' });
+              toast.success('Welcome! Quick access granted');
+              navigate('/');
+            }}
+            className="w-full mt-4 py-3 px-4 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-colors shadow-md"
+          >
+            🚀 Quick Access (Skip Form)
+          </button>
         </form>
 
         {/* Signup Link */}
@@ -127,3 +116,4 @@ const Login = () => {
 };
 
 export default Login;
+

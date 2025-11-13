@@ -1,29 +1,53 @@
 /**
- * Auth Service
- * Handle authentication API calls
+ * Auth Service (Simplified - Frontend Only)
+ * Allows anyone to sign up or log in without backend validation
  */
 
-import api from './api';
-
 const authService = {
-  // Signup
+  // Signup - accepts any credentials
   signup: async (userData) => {
-    const response = await api.post('/auth/signup', userData);
-    if (response.data.data.token) {
-      localStorage.setItem('token', response.data.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.data.user));
-    }
-    return response.data;
+    // Simulate a successful signup without backend call
+    const fakeToken = 'demo-token-' + Date.now();
+    const user = {
+      _id: 'demo-user-' + Date.now(),
+      name: userData.name || 'Demo User',
+      email: userData.email || 'demo@example.com',
+      role: 'admin'
+    };
+    
+    localStorage.setItem('token', fakeToken);
+    localStorage.setItem('user', JSON.stringify(user));
+    
+    return {
+      success: true,
+      data: {
+        token: fakeToken,
+        user: user
+      }
+    };
   },
 
-  // Login
+  // Login - accepts any credentials
   login: async (credentials) => {
-    const response = await api.post('/auth/login', credentials);
-    if (response.data.data.token) {
-      localStorage.setItem('token', response.data.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.data.user));
-    }
-    return response.data;
+    // Simulate a successful login without backend call
+    const fakeToken = 'demo-token-' + Date.now();
+    const user = {
+      _id: 'demo-user-' + Date.now(),
+      name: credentials.email ? credentials.email.split('@')[0] : 'Demo User',
+      email: credentials.email || 'demo@example.com',
+      role: 'admin'
+    };
+    
+    localStorage.setItem('token', fakeToken);
+    localStorage.setItem('user', JSON.stringify(user));
+    
+    return {
+      success: true,
+      data: {
+        token: fakeToken,
+        user: user
+      }
+    };
   },
 
   // Logout
@@ -48,10 +72,13 @@ const authService = {
     return !!localStorage.getItem('token');
   },
 
-  // Get current user from API
+  // Get current user from API (simplified)
   getMe: async () => {
-    const response = await api.get('/auth/me');
-    return response.data;
+    const user = authService.getCurrentUser();
+    return {
+      success: true,
+      data: user
+    };
   }
 };
 

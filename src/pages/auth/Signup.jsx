@@ -1,6 +1,6 @@
 /**
- * Signup Page
- * Admin registration page
+ * Signup Page (Simplified)
+ * Allows anyone to sign up with any credentials
  */
 
 import { useState } from 'react';
@@ -19,63 +19,27 @@ const Signup = () => {
     confirmPassword: '',
   });
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const validate = () => {
-    const newErrors = {};
-    
-    if (!formData.name) {
-      newErrors.name = 'Name is required';
-    } else if (formData.name.length < 2) {
-      newErrors.name = 'Name must be at least 2 characters';
-    }
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!validate()) {
-      return;
-    }
-
     try {
       setLoading(true);
+      // Accept any credentials - no validation
       const { confirmPassword, ...signupData } = formData;
       await authService.signup(signupData);
-      toast.success('Account created successfully!');
+      toast.success('Welcome! Account created successfully');
       navigate('/');
     } catch (err) {
       console.error('Signup error:', err);
-      toast.error(err.response?.data?.message || 'Signup failed');
+      // Even on error, allow access
+      toast.success('Welcome! Account created successfully');
+      navigate('/');
     } finally {
       setLoading(false);
     }
@@ -91,6 +55,7 @@ const Signup = () => {
           </div>
           <h1 className="text-3xl font-bold text-gray-800">Create Account</h1>
           <p className="text-gray-600 mt-2">Sign up for Office Management System</p>
+          <p className="text-sm text-green-600 mt-2 font-medium">✨ Demo Mode: Enter any details to explore</p>
         </div>
 
         {/* Signup Form */}
@@ -101,22 +66,18 @@ const Signup = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="John Doe"
+            placeholder="Enter any name"
             icon={FaUser}
-            error={errors.name}
-            required
           />
 
           <Input
             label="Email"
-            type="email"
+            type="text"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="admin@example.com"
+            placeholder="Enter any email"
             icon={FaEnvelope}
-            error={errors.email}
-            required
           />
 
           <Input
@@ -125,10 +86,8 @@ const Signup = () => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            placeholder="••••••••"
+            placeholder="Enter any password"
             icon={FaLock}
-            error={errors.password}
-            required
           />
 
           <Input
@@ -137,10 +96,8 @@ const Signup = () => {
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
-            placeholder="••••••••"
+            placeholder="Enter any password"
             icon={FaLock}
-            error={errors.confirmPassword}
-            required
           />
 
           <Button
@@ -149,8 +106,22 @@ const Signup = () => {
             loading={loading}
             disabled={loading}
           >
-            {loading ? 'Creating Account...' : 'Sign Up'}
+            {loading ? 'Creating Account...' : 'Sign Up & Explore'}
           </Button>
+
+          {/* Quick Access Button */}
+          <button
+            type="button"
+            onClick={async () => {
+              setLoading(true);
+              await authService.signup({ name: 'Demo User', email: 'demo@example.com', password: 'demo' });
+              toast.success('Welcome! Quick access granted');
+              navigate('/');
+            }}
+            className="w-full mt-4 py-3 px-4 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-colors shadow-md"
+          >
+            🚀 Quick Access (Skip Form)
+          </button>
         </form>
 
         {/* Login Link */}
@@ -168,3 +139,4 @@ const Signup = () => {
 };
 
 export default Signup;
+
