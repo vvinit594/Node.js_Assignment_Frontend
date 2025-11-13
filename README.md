@@ -69,6 +69,16 @@ A comprehensive full-stack web application for managing office departments and e
 - **Notifications**: React Toastify (v10.0.6)
 - **Icons**: React Icons (v4.12.0)
 
+
+Images for Refernce :-
+<img width="1919" height="977" alt="image" src="https://github.com/user-attachments/assets/5925962a-ba00-4bfa-aa28-e2243397dd38" />
+<img width="1919" height="974" alt="image" src="https://github.com/user-attachments/assets/ddb8e451-f8d3-48d1-8974-4cf9c823c1fd" />
+<img width="1916" height="981" alt="image" src="https://github.com/user-attachments/assets/a87a967f-a8b0-4657-b037-0d834df83ab5" />
+<img width="1919" height="979" alt="image" src="https://github.com/user-attachments/assets/e62076f7-6825-47e5-b21b-09ac34ad1b35" />
+
+
+
+
 ## 📁 Project Structure
 
 ```
@@ -246,6 +256,7 @@ npm run dev
 ```
 
 ### Access the Application
+
 
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:5000/api
